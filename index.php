@@ -1,30 +1,17 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "Books";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'BookRepository.php';
 
-$sql = "SELECT bookId, title FROM Books";
-$result = $conn->query($sql);
+$bookRepository = new BookRepository();
+$books = $bookRepository->getAll();
 
-if ($result->num_rows > 0) {
-    echo "<table><tr><th>ID</th><th>Title</th></tr>";
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "<tr>
-                <td><a href=\"book.php?id=".$row["bookId"]."\">".$row["bookId"]."</td> 
-                <td>".$row["title"]."</td>
+echo "<table><tr><th>ID</th><th>Title</th></tr>";
+foreach ($books as $book){
+    echo "<tr>
+               <td><a href=\"book.php?id=".$book->getId()."\">".$book->getId()."</td>
+                <td>".$book->getTitle()."</td>
               </tr>";
-    }
-    echo "</table>";
-} else {
-    echo "0 results";
 }
-$conn->close();
+echo "</table>";
+
+$bookRepository->close();
